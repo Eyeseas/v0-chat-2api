@@ -1,0 +1,89 @@
+@import url("https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;600&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 38 100% 97%;
+    --foreground: 228 20% 16%;
+    --card: 40 100% 99%;
+    --card-foreground: 228 20% 17%;
+    --popover: 40 100% 99%;
+    --popover-foreground: 228 20% 17%;
+
+    --primary: 349 84% 66%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 21 100% 69%;
+    --secondary-foreground: 24 32% 16%;
+
+    --muted: 32 70% 92%;
+    --muted-foreground: 228 14% 38%;
+    --accent: 43 100% 66%;
+    --accent-foreground: 28 40% 16%;
+    --destructive: 0 74% 53%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 28 45% 84%;
+    --input: 28 45% 84%;
+    --ring: 349 84% 66%;
+    --radius: 0.95rem;
+  }
+
+  .dark {
+    --background: 228 20% 10%;
+    --foreground: 34 48% 95%;
+    --card: 228 18% 14%;
+    --card-foreground: 34 48% 95%;
+    --popover: 228 18% 14%;
+    --popover-foreground: 34 48% 95%;
+
+    --primary: 349 84% 66%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 21 92% 63%;
+    --secondary-foreground: 26 42% 12%;
+
+    --muted: 228 14% 23%;
+    --muted-foreground: 32 30% 72%;
+    --accent: 158 35% 25%;
+    --accent-foreground: 156 42% 87%;
+    --destructive: 0 69% 52%;
+    --destructive-foreground: 0 0% 100%;
+
+    --border: 228 11% 28%;
+    --input: 228 11% 28%;
+    --ring: 43 100% 66%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  html,
+  body,
+  #root {
+    min-height: 100%;
+  }
+
+  body {
+    @apply bg-background text-foreground antialiased;
+    font-family:
+      "Space Grotesk",
+      "Avenir Next",
+      "Segoe UI",
+      sans-serif;
+    text-rendering: optimizeLegibility;
+  }
+
+  code,
+  pre {
+    font-family:
+      "JetBrains Mono",
+      "SF Mono",
+      "Menlo",
+      monospace;
+  }
+}

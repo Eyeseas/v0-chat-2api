@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="v0 Proxy Console favicon">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#1B1F2F" />
+      <stop offset="100%" stop-color="#121728" />
+    </linearGradient>
+    <filter id="softGlow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur stdDeviation="1.25" result="blur" />
+      <feMerge>
+        <feMergeNode in="blur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="64" height="64" rx="14" fill="url(#bg)" />
+  <rect x="4" y="4" width="56" height="56" rx="11" fill="none" stroke="#2E354F" />
+
+  <circle cx="23" cy="28" r="10.5" fill="#F26076" opacity="0.95" />
+  <circle cx="41" cy="36" r="10.5" fill="#458B73" opacity="0.95" />
+
+  <path d="M18 18h26" stroke="#FFD150" stroke-width="3.25" stroke-linecap="round" filter="url(#softGlow)" />
+  <path d="M44 18l-4.6-3v6z" fill="#FFD150" />
+
+  <path d="M46 46H20" stroke="#FF9760" stroke-width="3.25" stroke-linecap="round" filter="url(#softGlow)" />
+  <path d="M20 46l4.6-3v6z" fill="#FF9760" />
+</svg>
