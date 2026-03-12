@@ -40,6 +40,7 @@ HOST=127.0.0.1
 PORT=3000
 OPENAI_API_KEY=local-dev-openai-key
 CHAT_STATE_FILE=.data/chat-state.db
+SERVE_WEB_UI=true
 ```
 
 Notes:
@@ -47,6 +48,7 @@ Notes:
 - `V0_API_KEY` is required.
 - In the current implementation, clients calling the local proxy should send `Authorization: Bearer $OPENAI_API_KEY`.
 - Use `HOST=0.0.0.0` if you want to reach the proxy from another device on your LAN.
+- Set `SERVE_WEB_UI=false` for API-only deployments so the server does not expect `web/dist`.
 
 ## Database
 
@@ -67,6 +69,12 @@ npm run dev
 ```
 
 This starts the Fastify server on `HOST:PORT` and serves the built frontend from `web/dist`.
+
+For API-only local runs without the dashboard bundle:
+
+```bash
+SERVE_WEB_UI=false npm run dev
+```
 
 If you change frontend code and are not running a separate Vite dev server, rebuild the frontend bundle:
 
@@ -177,3 +185,27 @@ npm --prefix web run build
 ```bash
 npm test
 ```
+
+## Docker (API-only)
+
+Build the smallest practical API-only image:
+
+```bash
+docker build -t v0-openai-proxy:api .
+```
+
+Run it with the dashboard disabled and a persisted SQLite volume:
+
+```bash
+docker run --rm -p 3000:3000 \
+  -e V0_API_KEY=your_v0_api_key_here \
+  -e OPENAI_API_KEY=local-dev-openai-key \
+  -e HOST=0.0.0.0 \
+  -e PORT=3000 \
+  -e SERVE_WEB_UI=false \
+  -e CHAT_STATE_FILE=.data/chat-state.db \
+  -v v0-proxy-data:/app/.data \
+  v0-openai-proxy:api
+```
+
+The container runs database migrations on startup and then serves only the API routes.

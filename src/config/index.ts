@@ -3,6 +3,23 @@ import { z } from "zod";
 
 loadEnv();
 
+const booleanishSchema = z.preprocess((value) => {
+  if (typeof value !== "string") {
+    return value;
+  }
+
+  const normalized = value.trim().toLowerCase();
+  if (["true", "1", "yes", "on"].includes(normalized)) {
+    return true;
+  }
+
+  if (["false", "0", "no", "off"].includes(normalized)) {
+    return false;
+  }
+
+  return value;
+}, z.boolean());
+
 const configSchema = z.object({
   V0_API_KEY: z.string().min(1, "V0_API_KEY is required"),
   V0_API_BASE_URL: z
@@ -17,6 +34,7 @@ const configSchema = z.object({
     .default("3000"),
   OPENAI_API_KEY: z.string().optional(),
   CHAT_STATE_FILE: z.string().default(".data/chat-state.db"),
+  SERVE_WEB_UI: booleanishSchema.default(true),
   NODE_ENV: z
     .enum(["development", "production", "test"])
     .default("development"),

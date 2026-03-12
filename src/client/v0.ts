@@ -88,6 +88,26 @@ class V0APIError extends Error {
   }
 }
 
+function logOutboundRequest(
+  operation: "createChat" | "createChatStream" | "sendMessage" | "sendMessageStream",
+  endpoint: "/chats" | "/chats/:chatId/messages",
+  body: {
+    modelConfiguration?: V0ModelConfiguration;
+    responseMode?: V0ResponseMode | "experimental_stream";
+  }
+) {
+  if (config.NODE_ENV === "production") {
+    return;
+  }
+
+  console.debug("[v0 outbound request]", {
+    operation,
+    endpoint,
+    responseMode: body.responseMode ?? null,
+    modelId: body.modelConfiguration?.modelId ?? null,
+  });
+}
+
 async function makeRequest<T>(
   endpoint: string,
   options: RequestInit = {}
@@ -150,6 +170,8 @@ export async function createChat(
     metadata: options?.metadata,
   };
 
+  logOutboundRequest("createChat", "/chats", body);
+
   return makeRequest<V0ChatResponse>("/chats", {
     method: "POST",
     body: JSON.stringify(body),
@@ -173,6 +195,8 @@ export async function* createChatStream(
     responseMode: "experimental_stream" as const,
     metadata: options?.metadata,
   };
+
+  logOutboundRequest("createChatStream", "/chats", body);
 
   const headers: Record<string, string> = {
     Authorization: `Bearer ${V0_API_KEY}`,
@@ -260,6 +284,8 @@ export async function* sendMessageStream(
     responseMode: "experimental_stream" as const,
   };
 
+  logOutboundRequest("sendMessageStream", "/chats/:chatId/messages", body);
+
   const headers: Record<string, string> = {
     Authorization: `Bearer ${V0_API_KEY}`,
     "Content-Type": "application/json",
@@ -344,6 +370,8 @@ export async function sendMessage(
     modelConfiguration: options?.modelConfiguration,
     responseMode: options?.responseMode ?? "sync",
   };
+
+  logOutboundRequest("sendMessage", "/chats/:chatId/messages", body);
 
   return makeRequest<V0ChatResponse>(`/chats/${encodeURIComponent(chatId)}/messages`, {
     method: "POST",

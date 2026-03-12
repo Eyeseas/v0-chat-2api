@@ -26,7 +26,9 @@ export async function createApp() {
     allowedHeaders: ["Content-Type", "Authorization", "x-api-key"],
   });
 
-  if (config.NODE_ENV !== "test") {
+  const serveWebUi = config.NODE_ENV !== "test" && config.SERVE_WEB_UI;
+
+  if (serveWebUi) {
     const staticPath = join(__dirname, "../../web/dist");
     await app.register(fastifyStatic, {
       root: staticPath,
@@ -39,7 +41,7 @@ export async function createApp() {
 
   app.setNotFoundHandler((request, reply) => {
     const isSpaFallbackRoute =
-      config.NODE_ENV !== "test" &&
+      serveWebUi &&
       request.method === "GET" &&
       !request.url.startsWith("/v1/") &&
       !request.url.startsWith("/internal/");

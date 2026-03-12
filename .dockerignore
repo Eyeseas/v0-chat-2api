@@ -1,0 +1,12 @@
+node_modules/
+web/node_modules/
+dist/
+web/dist/
+.git/
+.data/
+.env
+.env.*
+*.log
+npm-debug.log*
+coverage/
+*.tsbuildinfo

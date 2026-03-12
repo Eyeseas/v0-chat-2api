@@ -106,7 +106,18 @@ export async function chatRoutes(fastify: FastifyInstance) {
     }
 
     const { model, messages, stream } = result.data;
+    const modelId = mapModel(model);
     let createdChatResponse: unknown | null = null;
+
+    request.log.debug(
+      {
+        openaiModel: model,
+        v0ModelId: modelId,
+        stream,
+        messageCount: messages.length,
+      },
+      "Received chat completion request"
+    );
 
     const authHeader = request.headers.authorization;
     if (authHeader !== `Bearer ${config.OPENAI_API_KEY}`) {
@@ -126,7 +137,7 @@ export async function chatRoutes(fastify: FastifyInstance) {
           if (stream) {
             const streamResponse = v0.createChatStream(createInput.message, {
               system: createInput.system,
-              modelConfiguration: { model: mapModel(model) },
+              modelConfiguration: { modelId },
             });
 
             await handleStreamingResponse(reply, streamResponse, {
@@ -140,7 +151,7 @@ export async function chatRoutes(fastify: FastifyInstance) {
           const response = await withRetry(() =>
             v0.createChat(createInput.message, {
               system: createInput.system,
-              modelConfiguration: { model: mapModel(model) },
+              modelConfiguration: { modelId },
               responseMode: "sync",
             })
           );
@@ -179,7 +190,7 @@ export async function chatRoutes(fastify: FastifyInstance) {
 
       if (stream) {
         const streamResponse = v0.sendMessageStream(chatId, lastMessage.content, {
-          modelConfiguration: { model: mapModel(model) },
+          modelConfiguration: { modelId },
         });
 
         await handleStreamingResponse(reply, streamResponse, {
@@ -193,7 +204,7 @@ export async function chatRoutes(fastify: FastifyInstance) {
 
       const response = await withRetry(() =>
         v0.sendMessage(chatId, lastMessage.content, {
-          modelConfiguration: { model: mapModel(model) },
+          modelConfiguration: { modelId },
           responseMode: "sync",
         })
       );
@@ -526,13 +537,13 @@ function getStringField(value: unknown, key: string): string | null {
   return typeof candidate === "string" ? candidate : null;
 }
 
-function mapModel(model: string): string {
+function mapModel(model: string): SupportedV0Model {
   return resolveModelId(model) ?? "v0-auto";
 }
 
-function resolveModelId(model: string): string | null {
+function resolveModelId(model: string): SupportedV0Model | null {
   if (SUPPORTED_V0_MODELS.includes(model as SupportedV0Model)) {
-    return model;
+    return model as SupportedV0Model;
   }
 
   return OPENAI_MODEL_ALIASES[model] ?? null;

@@ -40,7 +40,7 @@ Note:
 | OpenAI-style Input | v0 `chats` Input | Notes |
 |---|---|---|
 | `messages[]` | `message` + optional `system` | For continuation, use latest user message as `message`; map one system message if present |
-| `model` | `modelConfiguration.model` (legacy `modelId` also seen in docs) | Model namespaces differ; proxy needs explicit model map |
+| `model` | `modelConfiguration.modelId` | Model namespaces differ; proxy needs explicit model map |
 | `stream` | `responseMode` | `true -> "experimental_stream"`, `false -> "sync"` (or `"async"` by policy) |
 | `metadata` | `metadata` | v0 supports metadata on chat create/init |
 | image/file content in messages | `attachments: [{url}]` | Requires URL-accessible assets; base64 passthrough is not 1:1 in `chats` |

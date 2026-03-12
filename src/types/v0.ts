@@ -7,12 +7,19 @@ export const V0ResponseModeSchema = z.enum([
 ]);
 export type V0ResponseMode = z.infer<typeof V0ResponseModeSchema>;
 
+export const V0ModelIdSchema = z.enum([
+  "v0-auto",
+  "v0-mini",
+  "v0-pro",
+  "v0-max",
+  "v0-max-fast",
+]);
+export type V0ModelId = z.infer<typeof V0ModelIdSchema>;
+
 export const V0ModelConfigurationSchema = z.object({
-  model: z.string().optional(),
-  temperature: z.number().min(0).max(2).optional(),
-  maxTokens: z.number().int().positive().optional(),
-  topP: z.number().min(0).max(1).optional(),
-  stopSequences: z.array(z.string()).optional(),
+  modelId: V0ModelIdSchema.optional(),
+  imageGenerations: z.boolean().optional(),
+  thinking: z.boolean().optional(),
 });
 export type V0ModelConfiguration = z.infer<typeof V0ModelConfigurationSchema>;
 
