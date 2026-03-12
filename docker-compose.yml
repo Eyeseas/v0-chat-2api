@@ -11,7 +11,7 @@ services:
       - HOST=0.0.0.0
       - PORT=3000
       - SERVE_WEB_UI=false
-      - CHAT_STATE_FILE=/app/.data/chat-state.db
+      - CHAT_STATE_FILE=.data/chat-state.db
     volumes:
       - v0-proxy-data:/app/.data
 
