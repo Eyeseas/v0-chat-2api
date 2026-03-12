@@ -1,0 +1,19 @@
+services:
+  v0-openai-proxy:
+    image: ghcr.io/eyeseas/v0-chat-2api:latest
+    container_name: v0-chat-2api
+    restart: always
+    ports:
+      - "3000:3000"
+    environment:
+      - V0_API_KEY=${V0_API_KEY:-}
+      - OPENAI_API_KEY=${OPENAI_API_KEY:-local-dev-openai-key}
+      - HOST=0.0.0.0
+      - PORT=3000
+      - SERVE_WEB_UI=false
+      - CHAT_STATE_FILE=/app/.data/chat-state.db
+    volumes:
+      - v0-proxy-data:/app/.data
+
+volumes:
+  v0-proxy-data:
