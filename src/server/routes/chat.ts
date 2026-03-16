@@ -10,6 +10,11 @@ import type { CanonicalMessage } from "../../types/conversation.js";
 import type { V0StreamEvent } from "../../types/v0.js";
 import { computeFullHash, computePrefixHash } from "../../utils/canonicalize.js";
 import { buildV0CreateChatInput } from "../../utils/history-bootstrap.js";
+import {
+  SUPPORTED_V0_MODELS,
+  mapModel,
+  resolveModelId,
+} from "../../utils/model-mapping.js";
 
 const ChatRequestSchema = z.object({
   model: z.string(),
@@ -27,21 +32,6 @@ const ChatRequestSchema = z.object({
 const ModelParamsSchema = z.object({
   model: z.string().min(1),
 });
-
-const SUPPORTED_V0_MODELS = [
-  "v0-auto",
-  "v0-mini",
-  "v0-pro",
-  "v0-max",
-  "v0-max-fast",
-] as const;
-type SupportedV0Model = (typeof SUPPORTED_V0_MODELS)[number];
-
-const OPENAI_MODEL_ALIASES: Record<string, SupportedV0Model> = {
-  "gpt-4": "v0-pro",
-  "gpt-4-turbo": "v0-max",
-  "gpt-3.5-turbo": "v0-mini",
-};
 
 const OPENAI_MODEL_CREATED = 1704067200;
 
@@ -535,18 +525,6 @@ function getStringField(value: unknown, key: string): string | null {
 
   const candidate = value[key];
   return typeof candidate === "string" ? candidate : null;
-}
-
-function mapModel(model: string): SupportedV0Model {
-  return resolveModelId(model) ?? "v0-auto";
-}
-
-function resolveModelId(model: string): SupportedV0Model | null {
-  if (SUPPORTED_V0_MODELS.includes(model as SupportedV0Model)) {
-    return model as SupportedV0Model;
-  }
-
-  return OPENAI_MODEL_ALIASES[model] ?? null;
 }
 
 function transformToOpenAI(v0Response: unknown, model: string) {

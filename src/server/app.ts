@@ -7,6 +7,7 @@ import { config } from "../config/index.js";
 import { healthRoutes } from "./routes/health.js";
 import { chatRoutes } from "./routes/chat.js";
 import { internalRoutes } from "./routes/internal.js";
+import { anthropicRoutes } from "./routes/anthropic.js";
 import { setupErrorHandler } from "../utils/errors.js";
 
 const __filename = fileURLToPath(import.meta.url);
@@ -58,6 +59,7 @@ export async function createApp() {
 
   await app.register(healthRoutes);
   await app.register(chatRoutes);
+  await app.register(anthropicRoutes);
   await app.register(internalRoutes);
 
   return app;
